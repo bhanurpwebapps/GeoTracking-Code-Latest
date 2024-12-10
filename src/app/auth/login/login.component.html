@@ -1,0 +1,68 @@
+<div class="login">
+    <div class="container-fluid">
+        <div class="row login-box">
+            <div class="col-lg-7 bg-img">
+                <div class="loginInfo clearfix">
+
+
+
+                </div>
+            </div>
+            <div class="col-lg-5 form-section">
+                <div class="form-inner">
+                    <div class="loginHeader">
+                        <h3>LOGIN</h3>
+                        <h6>Welcome back! Please enter your details</h6>
+                    </div>
+                    <form>
+                        <div class="formGroup">
+                            <label class="label-control">User Name</label>
+                            <input type="text" name="username" class="form-control" placeholder="Enter your Username"
+                                [(ngModel)]="username" required #usernameInput="ngModel" />
+                            <div *ngIf="usernameInput.invalid && usernameInput.touched" class="error-message">
+                                Username is required.
+                            </div>
+                        </div>
+                        <div class="formGroup">
+                            <label class="label-control">Password</label>
+                            <input type="password" name="password" class="form-control"
+                                placeholder="Enter your Password" [(ngModel)]="password" required
+                                #passwordInput="ngModel" />
+                            <div *ngIf="passwordInput.invalid && passwordInput.touched" class="error-message">
+                                Password is required.
+                            </div>
+                        </div>
+
+                        <!-- <div class="mb-3 d-flex justify-content-between" style="display: none;">
+                            <div class="form-check">
+                                <input class="form-check-input" type="checkbox" id="formCheck1" checked>
+                                <label class="form-check-label" for="formCheck1">
+                                    Form Checkbox
+                                </label>
+                            </div>
+
+                            <a class="forgotpasswordLink" href="">Forgot password</a>
+                        </div> -->
+
+                        <div class="form-group loginButtons">
+                            <div class="pull-right">
+                                <button type="submit" (click)="login()" class="btn btn-primary width100 me-1">SIGN
+                                    IN</button>
+
+                            </div>
+                        </div>
+                    </form>
+                    <div class="clearfix"></div>
+
+                    <!-- <h6 class="alreadyuser">Don't have an account? <a  href="/signup">Signup</a></h6> -->
+
+
+                    <!-- <p class="login-footer">© 2024 . All rights reserved.</p> -->
+                </div>
+
+
+
+            </div>
+        </div>
+    </div>
+</div>

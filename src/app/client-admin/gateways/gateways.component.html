@@ -1,0 +1,176 @@
+<div class="row">
+    <div class="col-md-12">
+        <div class="card cardShadow">
+            <div class="card-body">
+                <div class="cardHeading">
+                    <h3>Gateways List</h3>
+                    <div class="cardHeadingRight">
+
+                        <form class="app-search">
+                            <div class="position-relative">
+                                <input type="text" class="form-control" placeholder="Search..." name="gatewaySearch" id="gatewaySearch" [(ngModel)]="query"
+                                (keyup)="onKeySearch()">
+                                <span class="ri-search-line"></span>
+                            </div>
+                        </form>
+
+                        <button type="button" class="btn btn-primary createBt"
+                            (click)="creategatewaysAction(gatewayCreateModal)">
+                            <img src="assets/images/create-icon.svg" alt="create" />
+                            <span>Create Gateway</span>
+                        </button>
+                    </div>
+                </div>
+
+                <div class="table-responsive">
+                    <table class="table mb-0 mt-3">
+                        <thead>
+                            <tr>
+                                <th>#</th>
+                                <th>Area</th>
+                                <th>Mac Address</th>
+                                <th>Min RSSI</th>
+                                <th>Max RSSI</th>
+                                <th>Connected Status</th>
+                                <th>Status</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr *ngFor="let gateway of gateways; let i = index">
+                                <td>{{ i + 1 }}</td>
+                                <td>{{gateway.areaName}}</td>
+                                <td>{{gateway.macAddress}}</td>
+                                <td>{{gateway.minRSSI}} </td>
+                                <td>{{gateway.maxRSSI}}</td>
+                                <td>Active</td>
+                                <td class="gridswitchToggleStyle"><ui-switch [checked]="gateway.status=='Active'?true:false" (change)="onStatusChange($event,gateway)"></ui-switch></td>
+                                <td>
+                                    <!-- <button type="submit" class="btn tableIconBt waves-effect waves-light me-1">
+                                        <img src="assets/images/view-icon.svg" />
+                                    </button> -->
+
+                                    <button type="submit" class="btn tableIconBt waves-effect waves-light me-1" (click)="ViewDataForEdit(gateway,gatewayCreateModal)">
+                                        <img src="assets/images/edit-icon.svg" />
+                                    </button>
+
+                                    <!-- <button type="submit" class="btn tableIconBt waves-effect waves-light me-1">
+                                        <img src="assets/images/delete-icon.svg" />
+                                    </button> -->
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                    <div class="noData" *ngIf="!hasGateways">
+                        <img src="assets/images/nodata.png" alt="nodata">
+                            <h4>No Data Found</h4>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+
+
+    </div>
+
+
+
+
+    <ng-template #gatewayCreateModal let-modal>
+        <div class="modalStyles">
+            <div class="modal-header">
+                <h4 class="modal-title" id="modal-basic-title">Create Gateway</h4>
+                <button type="button" class="btn-close" aria-label="Close"
+                    (click)="modal.dismiss('Cross click')"></button>
+            </div>
+            <div class="modal-body">
+
+                <form class="formStyle" [formGroup]="gatewayForm">
+                    <div class="row">
+
+                        <div class="col-sm-6">
+                            <div class="formGroup">
+                                <label>Area</label>
+                                <select class="form-select form-control" aria-label="select type" id="area"
+                                    formControlName="area"
+                                    [ngClass]="{ 'is-invalid': gatewayForm.get('area')?.invalid && gatewayForm.get('area')?.touched }">
+                                    <option [value]="null" disabled selected>Select Type</option>
+                                    <option *ngFor="let area of areas" [value]="area._id">
+                                        {{ area.name }}
+                                    </option>
+                                </select>
+                                <!-- Validation Message -->
+                                <div *ngIf="gatewayForm.get('area')?.invalid && gatewayForm.get('area')?.touched"
+                                    class="invalid-feedback">
+                                    <small *ngIf="gatewayForm.get('area')?.errors?.['required']">Area is
+                                        required.</small>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="col-sm-6">
+                            <div class="formGroup">
+                                <label>Mac Address</label>
+                                <input type="text" class="form-control" formControlName="macAddress"
+                                [ngClass]="{ 'is-invalid': gatewayForm.get('macAddress')?.invalid && gatewayForm.get('macAddress')?.touched }">
+                                <div *ngIf="gatewayForm.get('macAddress')?.invalid && gatewayForm.get('macAddress')?.touched"
+                                    class="invalid-feedback">
+                                    <small *ngIf="gatewayForm.get('macAddress')?.errors?.['required']">Name is
+                                        required.</small>
+                                    <small *ngIf="gatewayForm.get('macAddress')?.errors?.['minlength']">macAddress must be at
+                                        least 12 characters long.</small>
+                                </div>
+                            </div>
+
+                        </div>
+
+                        <div class="col-sm-6">
+                            <div class="formGroup">
+                                <label>Min RSSI</label>
+                                <input type="number" class="form-control" formControlName="minRSSI" id="minRSSI"
+                                [ngClass]="{ 'is-invalid': gatewayForm.get('minRSSI')?.invalid && gatewayForm.get('minRSSI')?.touched }">
+                                <div *ngIf="gatewayForm.get('minRSSI')?.hasError('required') && gatewayForm.get('minRSSI')?.touched">
+                                    Min RSSI is required.
+                                  </div>
+                                  <div *ngIf="gatewayForm.get('minRSSI')?.hasError('pattern') && gatewayForm.get('minRSSI')?.touched">
+                                    Min RSSI must be a valid number.
+                                  </div>
+                            </div>
+                        </div>
+
+                        <div class="col-sm-6">
+                            <div class="formGroup">
+                                <label>Max RSSI</label>
+                                <input type="number" class="form-control" formControlName="maxRSSI" id="maxRSSI"
+                                [ngClass]="{ 'is-invalid': gatewayForm.get('maxRSSI')?.invalid && gatewayForm.get('maxRSSI')?.touched }">
+                                <div *ngIf="gatewayForm.get('maxRSSI')?.invalid && gatewayForm.get('maxRSSI')?.touched"
+                                    class="invalid-feedback">
+                                    <small *ngIf="gatewayForm.get('maxRSSI')?.errors?.['required']">Maximum RSSI is
+                                        required.</small>
+                                </div>
+                            </div>
+                        </div>
+
+
+                        <div class="col-sm-6">
+                            <div class="formGroup">
+                                <label>Status</label>
+                                <div class="switchToggleStyle"><ui-switch [checked]="true" id="gatewayStatus"
+                                        name="gatewayStatus" formControlName="gatewayStatus"></ui-switch></div>
+                            </div>
+                        </div>
+                    </div>
+                </form>
+                <div *ngIf="gatewayForm.hasError('invalidRange')">
+                    Min RSSI must be less than or equal to Max RSSI.
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary cancelbtn"
+                    (click)="modal.dismiss('Cross click')">Cancel</button>
+                <button type="button" class="btn btn-primary  waves-effect waves-light me-1" [disabled]="gatewayForm.invalid" (click)="onSubmit(modal)">Submit</button>
+            </div>
+        </div>
+    </ng-template>
+
+</div>

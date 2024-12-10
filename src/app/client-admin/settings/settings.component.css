@@ -1,0 +1,13 @@
+.hint-text {
+    font-size: 0.8rem;
+    color: gray;
+    margin-top: 5px;
+    font-style: italic;
+    padding: 10px;
+  }
+
+  .alert {
+    color: red;
+    margin-top: 10px;
+  }
+  

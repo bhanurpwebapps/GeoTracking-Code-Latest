@@ -1,0 +1,143 @@
+<div class="row">
+    <div class="col-md-12">
+        <div class="card cardShadow">
+            <div class="card-body">
+                <div class="cardHeading">
+                    <h3>Badges List</h3> 
+                    <div class="cardHeadingRight">
+                        <form class="app-search">
+                            <div class="position-relative">
+                                <input type="text" class="form-control" placeholder="Search...">
+                                <span class="ri-search-line"></span>
+                            </div>
+                        </form>
+
+                        <button type="button" class="btn btn-primary createBt" (click)="createBadgesAction(badgesCreateModal)">
+                        <img src="assets/images/create-icon.svg" alt="create"/>
+                        <span>Create Badge</span>
+                        </button>
+                    </div>
+               </div>
+
+                <div class="table-responsive">
+                    <table class="table mb-0 mt-3">
+                        <thead>
+                            <tr>
+                                <th>Name</th>
+                                <th>User Name </th>
+                                <th>Email</th>
+                                <th>Contact Number</th>
+                                <th>Status</th>                                
+                                <th>Client Name</th> 
+                               <th>Actions</th>                               
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>Naresh</td>
+                                <td>Naresh Kumar</td>
+                                <td>naresh@gmail.com</td>
+                                <td>9876787766</td>
+                                <td class="gridswitchToggleStyle"><ui-switch [checked]="true"></ui-switch></td>
+                                <td>ClientName</td>                              
+                                 <td>
+                                    <!-- <button type="submit" class="btn tableIconBt waves-effect waves-light me-1">
+                                        <img src="assets/images/view-icon.svg"/>
+                                    </button>          -->
+
+                                    <button type="submit" class="btn tableIconBt waves-effect waves-light me-1">
+                                        <img src="assets/images/edit-icon.svg"/>
+                                    </button>         
+
+                                    <button type="submit" class="btn tableIconBt waves-effect waves-light me-1">
+                                        <img src="assets/images/delete-icon.svg"/>
+                                    </button>         
+                                </td> 
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+
+            </div>
+        </div>
+
+
+    </div>
+
+
+
+
+    <ng-template #badgesCreateModal let-modal >
+        <div class="modalStyles">
+        <div class="modal-header">
+            <h4 class="modal-title" id="modal-basic-title">Create Badges</h4>
+            <button type="button" class="btn-close" aria-label="Close" (click)="modal.dismiss('Cross click')"></button>
+        </div>
+        <div class="modal-body">
+
+            <form class="formStyle">
+                <div class="row">
+
+                    <div class="col-sm-6">
+                        <div class="formGroup">
+                            <label>Name</label>
+                            <input type="text" class="form-control" required="" placeholder="">
+                        </div>
+                    </div>
+                    
+                    <div class="col-sm-6">
+                        <div class="formGroup">
+                            <label>User Name</label>
+                            <input type="text" class="form-control" required="" placeholder="">
+                        </div>
+                    </div>
+
+
+                    <div class="col-sm-6">
+                        <div class="formGroup">
+                            <label>Email</label>
+                            <input type="text" class="form-control" required="" placeholder="">
+                        </div>
+
+                    </div>
+
+                    <div class="col-sm-6">
+                        <div class="formGroup">
+                            <label>Contact Number</label>
+                            <input type="text" class="form-control" required="" placeholder="">
+                        </div>
+                    </div>
+
+                            
+                    <div class="col-sm-6">
+                        <div class="formGroup">
+                            <label>Client Name</label>                        
+                               <select class="form-select form-control" aria-label="select authorized Areas">
+                                <option selected>Select Client Name</option>
+                                <option value="">Client 1</option>
+                                <option value="">Client 2</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <div class="col-sm-6">
+                        <div class="formGroup">
+                            <label>Status</label>
+                            <div class="switchToggleStyle"><ui-switch [checked]="true"></ui-switch></div>
+                        </div>
+                    </div>
+                </div>
+
+
+            </form>
+        </div>
+        <div class="modal-footer">
+            <button type="button" class="btn btn-secondary cancelbtn"
+                (click)="modal.dismiss('Cross click')">Cancel</button>
+            <button type="button" class="btn btn-primary  waves-effect waves-light me-1">Submit</button>
+        </div>
+        </div>
+    </ng-template>
+
+</div>
+

@@ -1,0 +1,286 @@
+<div class="row">
+    <div class="col-md-12">
+        <div class="card cardShadow">
+            <div class="card-body">
+                <div class="cardHeading">
+                    <div class="cardHeadingLeft">
+                        <h3>Students List</h3>                   
+                            <select class="form-select form-control" aria-label="Select Class" (change)="onSelectionChange($event)">
+                                <option [value]="null" disabled selected>Select Type</option>
+                                <option [value]="null">All</option>
+                                <option *ngFor="let area of areas | filterByType : 'Classroom': false" [value]="area._id">
+                                    {{ area.name }}
+                                </option>
+                            </select>                        
+                        </div>
+                    <div class="cardHeadingRight">
+                        <form class="app-search">
+                            <div class="position-relative">
+                                <input type="text" class="form-control" placeholder="Search..." name="gatewaySearch" id="gatewaySearch" [(ngModel)]="query"
+                                (keyup)="onKeySearch()">
+                                <span class="ri-search-line"></span>
+                            </div>
+                        </form>
+
+                        <button type="button" class="btn btn-primary createBt"
+                            (click)="createStudentAction(studentCreateModal)">
+                            <img src="assets/images/create-icon.svg" alt="create" />
+                            <span>Create Student</span>
+                        </button>
+                    </div>
+                </div>
+
+                <div class="table-responsive">
+                    <table class="table mb-0 mt-3">
+                        <thead>
+                            <tr>
+                                <th>Registration No</th>
+                                <th>Student Name</th>                                
+                                <th>Ble Device ID</th>
+                                <th>Roll No</th>
+                                <th>Address</th>
+                                <th>Phone</th>
+                                <th>Email</th>
+                                <th>Authorized Areas</th>
+                                <th>Status</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr *ngFor="let student of students; let i = index">
+                                <td>{{student.studentRegistrationNo}}</td>
+                                <td>{{student.studentName}}</td>
+                                <td>{{student.bleDeviceId}}</td>
+                                <td>{{student.rollNo}}</td>
+                                <td>{{student.address}}</td>
+                                <td>{{student.contact.phone}}</td>
+                                <td>{{student.contact.email}}</td>
+                                <!-- <td>{{student.authorizedAreas}}</td> -->
+                                 <td><ul>
+                                    <li *ngFor="let authArea of student.authorizedAreaNames;">{{authArea}}</li>
+                                 </ul></td>
+                                 <td class="gridswitchToggleStyle"><ui-switch [checked]="student.status=='Active'?true:false" (change)="onStatusChange($event,student)"></ui-switch></td>
+                                <td>
+                                    <!-- <button type="submit" class="btn tableIconBt waves-effect waves-light me-1">
+                                        <img src="assets/images/view-icon.svg" />
+                                    </button> -->
+
+                                    <button type="submit" class="btn tableIconBt waves-effect waves-light me-1" (click)="ViewDataForEdit(student,studentCreateModal)">
+                                        <img src="assets/images/edit-icon.svg" />
+                                    </button>
+<!-- 
+                                    <button type="submit" class="btn tableIconBt waves-effect waves-light me-1">
+                                        <img src="assets/images/delete-icon.svg" />
+                                    </button> -->
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                    <div class="noData" *ngIf="students.length===0">
+                        <img src="assets/images/nodata.png" alt="nodata">
+                            <h4>No Data Found</h4>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+
+
+    </div>
+
+
+
+
+    <ng-template #studentCreateModal let-modal>
+        <div class="modalStyles">
+            <div class="modal-header">
+                <h4 class="modal-title" id="modal-basic-title">Create Student</h4>
+                <button type="button" class="btn-close" aria-label="Close"
+                    (click)="modal.dismiss('Cross click')"></button>
+            </div>
+            <div class="modal-body">
+
+                <form class="formStyle" [formGroup]="studentForm">
+                    <div class="row">
+
+                        <div class="col-sm-6">
+                            <div class="formGroup">
+                                <label>Registration Number</label>
+                                <input type="text" id="studentRegistrationNo" class="form-control"
+                                    formControlName="studentRegistrationNo"
+                                    [ngClass]="{ 'is-invalid': studentForm.get('studentRegistrationNo')?.invalid && studentForm.get('studentRegistrationNo')?.touched }">
+                                <div *ngIf="studentForm.get('studentRegistrationNo')?.invalid && studentForm.get('studentRegistrationNo')?.touched"
+                                    class="invalid-feedback">
+                                    <small
+                                        *ngIf="studentForm.get('studentRegistrationNo')?.errors?.['required']">Student
+                                        Resgistration Number is
+                                        required.</small>
+                                    <small
+                                        *ngIf="studentForm.get('studentRegistrationNo')?.errors?.['minlength']">Student
+                                        Resgistration Number must be at
+                                        least 8 characters long.</small>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="col-sm-6">
+                            <div class="formGroup">
+                                <label>Ble Device ID</label>
+                                <input type="text" id="bleDeviceId" class="form-control" formControlName="bleDeviceId"
+                                    [ngClass]="{ 'is-invalid': studentForm.get('bleDeviceId')?.invalid && studentForm.get('bleDeviceId')?.touched }">
+                                <div *ngIf="studentForm.get('bleDeviceId')?.invalid && studentForm.get('bleDeviceId')?.touched"
+                                    class="invalid-feedback">
+                                    <small *ngIf="studentForm.get('bleDeviceId')?.errors?.['required']">BLE Device ID is
+                                        required.</small>
+                                    <small *ngIf="studentForm.get('bleDeviceId')?.errors?.['minlength']">BLE Device ID
+                                        must be at
+                                        least 8 characters long.</small>
+                                </div>
+                            </div>
+                        </div>
+
+
+                        <div class="col-sm-6">
+                            <div class="formGroup">
+                                <label>Student Name</label>
+                                <input type="text" id="studentName" class="form-control" formControlName="studentName"
+                                    [ngClass]="{ 'is-invalid': studentForm.get('studentName')?.invalid && studentForm.get('studentName')?.touched }">
+                                <div *ngIf="studentForm.get('studentName')?.invalid && studentForm.get('studentName')?.touched"
+                                    class="invalid-feedback">
+                                    <small *ngIf="studentForm.get('studentName')?.errors?.['required']">BLE Device ID is
+                                        required.</small>
+                                    <small *ngIf="studentForm.get('studentName')?.errors?.['minlength']">BLE Device ID
+                                        must be at
+                                        least 8 characters long.</small>
+                                </div>
+                            </div>
+
+                        </div>
+
+                        <div class="col-sm-6">
+                            <div class="formGroup">
+                                <label>Roll No</label>
+                                <input type="text" id="rollNo" class="form-control" formControlName="rollNo"
+                                    [ngClass]="{ 'is-invalid': studentForm.get('rollNo')?.invalid && studentForm.get('rollNo')?.touched }">
+                                <div *ngIf="studentForm.get('rollNo')?.invalid && studentForm.get('rollNo')?.touched"
+                                    class="invalid-feedback">
+                                    <small *ngIf="studentForm.get('rollNo')?.errors?.['required']">rollNo is
+                                        required.</small>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-sm-6">
+                            <div class="formGroup">
+                                <label>Class</label>
+                                <select class="form-select form-control" aria-label="select type" id="classroom"
+                                formControlName="classroom"
+                                [ngClass]="{ 'is-invalid': studentForm.get('classroom')?.invalid && studentForm.get('classroom')?.touched }">
+                                <option [value]="null" disabled selected>Select Type</option>
+                                <option *ngFor="let area of areas | filterByType : 'Classroom': false" [value]="area._id">
+                                    {{ area.name }}
+                                </option>
+                            </select>
+                            <!-- Validation Message -->
+                            <div *ngIf="studentForm.get('classroom')?.invalid && studentForm.get('classroom')?.touched"
+                                class="invalid-feedback">
+                                <small *ngIf="studentForm.get('classroom')?.errors?.['required']">Area is
+                                    required.</small>
+                            </div>
+                            </div>
+                        </div>
+
+                        <div class="col-sm-6">
+                            <div class="formGroup">
+                                <label>Address</label>
+                                <input type="text" id="address" class="form-control" formControlName="address"
+                                    [ngClass]="{ 'is-invalid': studentForm.get('address')?.invalid && studentForm.get('address')?.touched }">
+                                <div *ngIf="studentForm.get('address')?.invalid && studentForm.get('address')?.touched"
+                                    class="invalid-feedback">
+                                    <small *ngIf="studentForm.get('address')?.errors?.['required']">rollNo is
+                                        required.</small>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="col-sm-6">
+                            <div class="formGroup">
+                                <label>Phone</label>
+                                <input type="text" id="phone" class="form-control" formControlName="phone"
+                                    [ngClass]="{ 'is-invalid': studentForm.get('phone')?.invalid && studentForm.get('phone')?.touched }">
+                                <div *ngIf="studentForm.get('phone')?.invalid && studentForm.get('phone')?.touched"
+                                    class="invalid-feedback">
+                                    <small *ngIf="studentForm.get('phone')?.errors?.['required']">rollNo is
+                                        required.</small>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="col-sm-6">
+                            <div class="formGroup">
+                                <label>Email</label>
+                                <input type="email" id="email" class="form-control" formControlName="email"
+                                    [ngClass]="{ 'is-invalid': studentForm.get('email')?.invalid && studentForm.get('email')?.touched }" />
+                                <div *ngIf="studentForm.get('email')?.invalid && studentForm.get('email')?.touched"
+                                    class="invalid-feedback">
+                                    <small *ngIf="studentForm.get('email')?.errors?.['required']">Email is
+                                        required.</small>
+                                    <small *ngIf="studentForm.get('email')?.errors?.['email']">Please enter a valid
+                                        email
+                                        address.</small>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="col-sm-6">
+                            <div class="formGroup">
+                                <label>Authorized Areas</label>
+
+                                <!-- <select class="form-select form-control" aria-label="select type" id="authorizedAreas"
+                                    formControlName="authorizedAreas"
+                                    [ngClass]="{ 'is-invalid': studentForm.get('authorizedAreas')?.invalid && studentForm.get('authorizedAreas')?.touched }">
+                                    <option [value]="null" disabled selected>Select Type</option>
+                                    <option *ngFor="let area of areas | filterByType: 'Classroom': true" [value]="area._id">
+                                        {{ area.name }}
+                                    </option>
+                                </select> -->
+                                <ng-select
+                                placeholder="Select Authorized Areas"
+                                [items]="areas | filterByType: 'Classroom': true"
+                                 [multiple]="true"
+                                 [closeOnSelect]="false"
+                                   [hideSelected]="true"
+                                   [searchable]="true"
+                                    bindLabel="name"
+                                     bindValue="_id"
+                                     [(ngModel)]="selectedAreas" id="authorizedAreas"
+                                     formControlName="authorizedAreas"
+                                     [ngClass]="{ 'is-invalid': studentForm.get('authorizedAreas')?.invalid && studentForm.get('authorizedAreas')?.touched }">
+                               </ng-select> 
+                                <!-- Validation Message -->
+                                <div *ngIf="studentForm.get('authorizedAreas')?.invalid && studentForm.get('authorizedAreas')?.touched"
+                                    class="invalid-feedback">
+                                    <small *ngIf="studentForm.get('authorizedAreas')?.errors?.['required']">Area is
+                                        required.</small>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-sm-6">
+                            <div class="formGroup">
+                                <label>Status</label>
+                                <div class="switchToggleStyle"><ui-switch [checked]="true" id="studentStatus"
+                                        name="studentStatus" formControlName="studentStatus"></ui-switch></div>
+                            </div>
+                        </div>
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary cancelbtn"
+                    (click)="modal.dismiss('Cross click')">Cancel</button>
+                <button type="button" class="btn btn-primary  waves-effect waves-light me-1"
+                    [disabled]="studentForm.invalid" (click)="onSubmit(modal)">Submit</button>
+            </div>
+        </div>
+    </ng-template>
+
+</div>

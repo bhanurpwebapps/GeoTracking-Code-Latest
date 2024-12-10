@@ -1,0 +1,162 @@
+<div class="row">
+    <div class="col-md-12">
+        <div class="card cardShadow">
+            <div class="card-body">
+                <div class="cardHeading">
+                    <h3>Schools List</h3>
+                    <div class="cardHeadingRight">
+                        <form class="app-search" name="frmSearch">
+                            <div class="position-relative">
+                                <input type="text" name="emailSearch" id="emailSearch" [(ngModel)]="query"
+                                (keyup)="onKeySearch()"  class="form-control" placeholder="Search...">
+                                <span class="ri-search-line"></span>
+                            </div>
+                        </form>
+
+                        <button type="button" class="btn btn-primary createBt"
+                            (click)="createClientsAction(clientCreateModal)">
+                            <img src="assets/images/create-icon.svg" alt="create" />
+                            <span>Create School</span>
+                        </button>
+                    </div>
+                </div>
+
+                <div class="table-responsive">
+                    <table class="table mb-0 mt-3">
+                        <thead>
+                            <tr>
+                                <th>#</th>
+                                <th>School</th>
+                                <th>Email</th>
+                                <th>Phone</th>
+                                <th>Address</th>
+                                <th>Status</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr *ngFor="let client of clients; let i = index">
+                                <td>{{ i + 1 }}</td>
+                                <td>{{client.name}}</td>
+                                <td>{{client.email}}</td>
+                                <td>{{client.contactNumber}}</td>
+                                <td>{{client.address}}</td>
+                                <td class="gridswitchToggleStyle"><ui-switch [checked]="client.status=='Active'?true:false" (change)="onStatusChange($event,client)"></ui-switch></td>
+                                <td>
+                                    <button type="submit" class="btn tableIconBt waves-effect waves-light me-1" style="display: none;">
+                                        <img src="assets/images/view-icon.svg" />
+                                    </button>
+
+                                    <button type="submit" class="btn tableIconBt waves-effect waves-light me-1" (click)="ViewDataForEdit(client,clientCreateModal)">
+                                        <img src="assets/images/edit-icon.svg" />
+                                    </button>
+
+                                    <button type="submit" class="btn tableIconBt waves-effect waves-light me-1" style="display: none;">
+                                        <img src="assets/images/delete-icon.svg" />
+                                    </button>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+
+            </div>
+        </div>
+
+    </div>
+    <ng-template #clientCreateModal let-modal>
+        <div class="modalStyles">
+            <div class="modal-header">
+                <h4 class="modal-title" id="modal-basic-title">Create School</h4>
+                <button type="button" class="btn-close" aria-label="Close"
+                    (click)="modal.dismiss('Cross click')"></button>
+            </div>
+            <div class="modal-body">
+                <form class="formStyle" [formGroup]="clientForm">
+                    <div class="row">
+
+                        <div class="col-sm-6" style="display: none;">
+                            <div class="formGroup">
+                                <label>Subscription Plan</label>
+                                <select class="form-select form-control" aria-label="select subscription plan">
+                                    <option selected>Select Type</option>
+                                    <option value="">Basic</option>
+                                    <option value="">Premium</option>
+                                    <option value="">Enterprise</option>
+                                </select>
+                            </div>
+                        </div>
+
+                        <div class="col-sm-6">
+                            <div class="formGroup">
+                                <label for="clientName">School Name</label>
+                                <input type="text" id="clientName" class="form-control" formControlName="clientName"
+                                    [ngClass]="{ 'is-invalid': clientForm.get('clientName')?.invalid && clientForm.get('clientName')?.touched }" [ngClass]="{ 'is-invalid': clientForm.get('clientName')?.invalid && clientForm.get('clientName')?.touched }"/>
+                                <div *ngIf="clientForm.get('clientName')?.invalid && clientForm.get('clientName')?.touched"
+                                    class="invalid-feedback">
+                                    <small *ngIf="clientForm.get('clientName')?.errors?.['required']">Client name is
+                                        required.</small>
+                                    <small *ngIf="clientForm.get('clientName')?.errors?.['minlength']">Name must be at
+                                        least 3 characters long.</small>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="col-sm-6">
+                            <div class="formGroup">
+                                <label for="email">Email</label>
+                                <input type="email" id="email" class="form-control" formControlName="email"
+                                    [ngClass]="{ 'is-invalid': clientForm.get('email')?.invalid && clientForm.get('email')?.touched }" />
+                                <div *ngIf="clientForm.get('email')?.invalid && clientForm.get('email')?.touched"
+                                    class="invalid-feedback">
+                                    <small *ngIf="clientForm.get('email')?.errors?.['required']">Email is
+                                        required.</small>
+                                    <small *ngIf="clientForm.get('email')?.errors?.['email']">Please enter a valid email
+                                        address.</small>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="col-sm-6">
+                            <div class="formGroup">
+                                <label for="phoneNumber">Contact Number</label>
+                                <input type="text" id="phoneNumber" name="phoneNumber" class="form-control" formControlName="phoneNumber"
+                                    [ngClass]="{ 'is-invalid': clientForm.get('phoneNumber')?.invalid && clientForm.get('phoneNumber')?.touched }" />
+                                <div *ngIf="clientForm.get('phoneNumber')?.invalid && clientForm.get('phoneNumber')?.touched"
+                                    class="invalid-feedback">
+                                    <small *ngIf="clientForm.get('phoneNumber')?.errors?.['required']">Phone number is
+                                        required.</small>
+                                    <small *ngIf="clientForm.get('phoneNumber')?.errors?.['pattern']">Enter a valid
+                                        phone number (e.g., 1234567890).</small>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="col-sm-6">
+                            <div class="formGroup">
+                                <label for="clientAddress">Address</label>
+                                <textarea class="textarea-control" id="clientAddress" name="clientAddress" rows="2" formControlName="clientAddress" [ngClass]="{ 'is-invalid': clientForm.get('clientAddress')?.invalid && clientForm.get('clientAddress')?.touched }"></textarea>
+                                <div *ngIf="clientForm.get('clientAddress')?.invalid && clientForm.get('clientAddress')?.touched" class="invalid-feedback">
+                                    <small *ngIf="clientForm.get('clientAddress')?.errors?.['required']">Address is required.</small>
+                                  </div>
+                            </div>
+                        </div>
+
+                        <div class="col-sm-6">
+                            <div class="formGroup">
+                                <label>Status</label>
+                                <div class="switchToggleStyle"><ui-switch [checked]="true" id="clientStatus" name="clientStatus" formControlName="clientStatus"></ui-switch></div>
+                            </div>
+                        </div>
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary cancelbtn"
+                    (click)="modal.dismiss('Cross click')">Cancel</button>
+                <button type="button" class="btn btn-primary  waves-effect waves-light me-1" [disabled]="clientForm.invalid" (click)="onSubmit(modal)">Submit</button>
+            </div>
+        </div>
+    </ng-template>
+
+</div>
