@@ -26,4 +26,21 @@ export class DashboardService {
         return this.http.get(url);
       }
   }
+
+
+  // Example: Create a client
+  AppAdminDataSummaryCount(clientId:string): Observable<any> {
+    //const url = `${this.baseUrl}/dashboard/dashboarddata`;
+    //return this.http.post(url, clientData);
+    if(clientId)
+      {
+        const url = `${this.baseUrl}/productadmindashboard/appproviderdashboarddata?clientId=${clientId}`;
+        return this.http.get(url);
+      }
+      else
+      {
+        const url = `${this.baseUrl}/productadmindashboard/appproviderdashboarddata`;
+        return this.http.get(url);
+      }
+  }
 }

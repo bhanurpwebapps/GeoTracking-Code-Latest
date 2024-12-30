@@ -1,0 +1,70 @@
+<div class="viewAttendanceHeading">
+    <h3><span>Student ID:</span> {{studentRegNo}}</h3> <small>|</small>
+    <h3><span>Device ID:</span> {{deviceId}}</h3>
+</div>
+
+<div class="row">
+    <div class="col-md-12">
+        <div class="card cardShadow">
+            <div class="card-body">
+                <div class="cardHeading">
+                    <h3>View Attendance</h3>
+                    <button type="button" class="btn btn-primary createBt" (click)="backtoattendance()">
+                        <img src="assets/images/back_arrow_icon.svg" alt="Back" />
+                        <span>Back</span>
+                    </button>
+                    <!-- <div class="cardHeadingRight">
+                        <form class="app-search">
+                            <div class="position-relative">
+                                <input type="text" class="form-control" placeholder="Search...">
+                                <span class="ri-search-line"></span>
+                            </div>
+                        </form>
+
+                    </div> -->
+                </div>
+
+
+
+                <div class="table-responsive">
+                    <table class="table mb-0 mt-3">
+                        <thead>
+                            <tr>
+                                <th>#</th>
+                                <th>Detected Area</th>
+                                <th>Detected Area Type</th>
+                                <th>Detection Time</th>
+                                <th>Status</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr *ngFor="let attendance of attendanceList; let i = index">
+                                <td>{{ (pageNo - 1) * pageSize + i + 1 }}</td>
+                                <td>{{attendance.areaName}}</td>
+                                <td><span
+                                        [ngClass]="attendance.isAuthorized==='Authorized' ? 'present' : 'absent'">{{attendance.isAuthorized}}</span>
+                                </td>
+                                <td>{{attendance.lastDetectionTime | date: 'dd/MM/yyyy, hh:mm:ss a'}}</td>
+                                <td><span
+                                    [ngClass]="attendance.attendanceStatus==='Absent' ? 'absent' : 'present'">{{attendance.attendanceStatus}}</span>
+                            </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                    <div class="noData" *ngIf="attendanceList.length===0">
+                        <img src="assets/images/nodata.png" alt="nodata">
+                            <h4>No Data Found</h4>
+                    </div>
+                    <ngb-pagination *ngIf="attendanceList.length>0" [collectionSize]="totalPages" [(page)]="pageNo" [maxSize]="5" [rotate]="true" [boundaryLinks]="true" (pageChange)="onPageChange($event)"/>
+                </div>
+
+            </div>
+        </div>
+
+
+    </div>
+
+
+
+
+</div>

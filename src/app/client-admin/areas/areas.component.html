@@ -3,22 +3,23 @@
         <div class="card cardShadow">
             <div class="card-body">
                 <div class="cardHeading">
-                    <h3>Areas List</h3> 
+                    <h3>Areas List</h3>
                     <div class="cardHeadingRight">
                         <form class="app-search">
                             <div class="position-relative">
-                                <input type="text" class="form-control" placeholder="Search..." name="areaSearch" id="areaSearch" [(ngModel)]="query"
-                                (keyup)="onKeySearch()">
+                                <input type="text" class="form-control" placeholder="Search..." name="areaSearch"
+                                    id="areaSearch" [(ngModel)]="query" (keyup)="onKeySearch()">
                                 <span class="ri-search-line"></span>
                             </div>
                         </form>
-                        
-                        <button type="button" class="btn btn-primary createBt" (click)="createAreasAction(areasCreateModal)">
-                        <img src="assets/images/create-icon.svg" alt="create"/>
-                        <span>Create Areas</span>
+
+                        <button type="button" class="btn btn-primary createBt"
+                            (click)="createAreasAction(areasCreateModal)">
+                            <img src="assets/images/create-icon.svg" alt="create" />
+                            <span>Create Areas</span>
                         </button>
                     </div>
-               </div>
+                </div>
 
                 <div class="table-responsive">
                     <table class="table mb-0 mt-3">
@@ -36,26 +37,29 @@
                                 <td>{{ i + 1 }}</td>
                                 <td>{{area.name}}</td>
                                 <td>{{area.type}}</td>
-                                <td class="gridswitchToggleStyle"><ui-switch [checked]="area.status=='Active'?true:false" (change)="onStatusChange($event,area)"></ui-switch></td>
-                                 <td>
+                                <td class="gridswitchToggleStyle"><ui-switch
+                                        [checked]="area.status=='Active'?true:false"
+                                        (change)="onStatusChange($event,area)"></ui-switch></td>
+                                <td>
                                     <!-- <button type="submit" class="btn tableIconBt waves-effect waves-light me-1">
                                         <img src="assets/images/view-icon.svg"/>
                                     </button>          -->
 
-                                    <button type="submit" class="btn tableIconBt waves-effect waves-light me-1" (click)="ViewDataForEdit(area,areasCreateModal)">
-                                        <img src="assets/images/edit-icon.svg"/>
-                                    </button>         
+                                    <button type="submit" class="btn tableIconBt waves-effect waves-light me-1"
+                                        (click)="ViewDataForEdit(area,areasCreateModal)">
+                                        <img src="assets/images/edit-icon.svg" />
+                                    </button>
 
                                     <!-- <button type="submit" class="btn tableIconBt waves-effect waves-light me-1">
                                         <img src="assets/images/delete-icon.svg"/>
                                     </button>          -->
-                                </td> 
+                                </td>
                             </tr>
                         </tbody>
                     </table>
-                    <div class="noData" *ngIf="!hasAreas">
+                    <div class="noData" *ngIf="areas.length===0">
                         <img src="assets/images/nodata.png" alt="nodata">
-                            <h4>No Data Found</h4>
+                        <h4>No Data Found</h4>
                     </div>
                 </div>
 
@@ -68,64 +72,84 @@
 
 
 
-    <ng-template #areasCreateModal let-modal >
+    <ng-template #areasCreateModal let-modal>
         <div class="modalStyles">
-        <div class="modal-header">
-            <h4 class="modal-title" id="modal-basic-title">Create Areas</h4>
-            <button type="button" class="btn-close" aria-label="Close" (click)="modal.dismiss('Cross click')"></button>
-        </div>
-        <div class="modal-body">
-            <form class="formStyle" [formGroup]="areaForm">
-                <div class="row">
-                    <div class="col-sm-6">
-                        <div class="formGroup">
-                            <label>Area Name</label>
-                            <input type="text" id="name" class="form-control" formControlName="name"
+            <div class="modal-header">
+                <h4 class="modal-title" id="modal-basic-title">Create Areas</h4>
+                <button type="button" class="btn-close" aria-label="Close"
+                    (click)="modal.dismiss('Cross click')"></button>
+            </div>
+            <div class="modal-body">
+                <form class="formStyle" [formGroup]="areaForm">
+                    <div class="row">
+                        <div class="col-sm-6">
+                            <div class="formGroup">
+                                <label>Area Name</label>
+                                <input type="text" id="name" class="form-control" formControlName="name"
                                     [ngClass]="{ 'is-invalid': areaForm.get('name')?.invalid && areaForm.get('name')?.touched }">
                                 <div *ngIf="areaForm.get('name')?.invalid && areaForm.get('name')?.touched"
                                     class="invalid-feedback">
-                                    <small *ngIf="areaForm.get('name')?.errors?.['required']">Name is
+                                    <small *ngIf="areaForm.get('name')?.errors?.['required']">Area Name is
                                         required.</small>
                                     <small *ngIf="areaForm.get('name')?.errors?.['minlength']">Name must be at
                                         least 8 characters long.</small>
                                 </div>
+                            </div>
                         </div>
-                    </div>
 
 
-                    <div class="col-sm-6">
-                        <div class="formGroup">
-                            <label>Area Type</label>
-                            <select class="form-select form-control" aria-label="select type" id="type"
-                            formControlName="type"  [ngClass]="{ 'is-invalid': areaForm.get('type')?.invalid && areaForm.get('type')?.touched }">
-                                <option [value]="null" disabled selected>Select Type</option>                             
-                                <option *ngFor="let type of enums" [value]="type">
-                                    {{ type }}
-                                </option>
-                            </select>
-                             <!-- Validation Message -->
-                             <div *ngIf="areaForm.get('type')?.invalid && areaForm.get('type')?.touched"
-                             class="invalid-feedback">
-                             <small *ngIf="areaForm.get('type')?.errors?.['required']">User Role is
-                                 required.</small>
-                         </div>
+                        <div class="col-sm-6">
+                            <div class="formGroup">
+                                <label>Area Type</label>
+                                <select class="form-select form-control" aria-label="select type" id="type"
+                                    formControlName="type" (change)="onAreaTypeChange($event)"
+                                    [ngClass]="{ 'is-invalid': areaForm.get('type')?.invalid && areaForm.get('type')?.touched }">
+                                    <option [value]="null" disabled selected>Select Type</option>
+                                    <option *ngFor="let type of enums" [value]="type">
+                                        {{ type }}
+                                    </option>
+                                </select>
+                                <!-- Validation Message -->
+                                <div *ngIf="areaForm.get('type')?.invalid && areaForm.get('type')?.touched"
+                                    class="invalid-feedback">
+                                    <small *ngIf="areaForm.get('type')?.errors?.['required']">User Role is
+                                        required.</small>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-sm-6" *ngIf="isClassRoom">
+                            <div class="formGroup">
+                                <label>Teachers</label>
+                                <ng-select placeholder="Select Authorized Areas"
+                                    [items]="users" [multiple]="false"
+                                    [closeOnSelect]="false" [hideSelected]="true" [searchable]="true" bindLabel="name"
+                                    bindValue="_id" [(ngModel)]="selectedUsers" id="users" formControlName="users"
+                                    [ngClass]="{ 'is-invalid': areaForm.get('users')?.invalid && areaForm.get('users')?.touched }">
+                                </ng-select>
+                                <!-- Validation Message -->
+                                <div *ngIf="areaForm.get('users')?.invalid && areaForm.get('users')?.touched"
+                                    class="invalid-feedback">
+                                    <small *ngIf="areaForm.get('users')?.errors?.['required']">Teacher is
+                                        required.</small>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-sm-6">
+                            <div class="formGroup">
+                                <label>Status</label>
+                                <div class="switchToggleStyle"><ui-switch [checked]="true" id="areaStatus"
+                                        name="areaStatus" formControlName="areaStatus"></ui-switch></div>
+                            </div>
                         </div>
                     </div>
-                    <div class="col-sm-6">
-                        <div class="formGroup">
-                            <label>Status</label>
-                            <div class="switchToggleStyle"><ui-switch [checked]="true" id="areaStatus"
-                                    name="areaStatus" formControlName="areaStatus"></ui-switch></div>
-                        </div>
-                    </div>
-                </div>
-            </form>
-        </div>
-        <div class="modal-footer">
-            <button type="button" class="btn btn-secondary cancelbtn"
-                (click)="modal.dismiss('Cross click')">Cancel</button>
-            <button type="button" class="btn btn-primary  waves-effect waves-light me-1" [disabled]="areaForm.invalid" (click)="onSubmit(modal)">Submit</button>
-        </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary cancelbtn"
+                    (click)="modal.dismiss('Cross click')">Cancel</button>
+                <button type="button" class="btn btn-primary  waves-effect waves-light me-1"
+                    [disabled]="areaForm.invalid" (click)="onSubmit(modal)">Submit</button>
+            </div>
         </div>
     </ng-template>
 

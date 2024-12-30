@@ -1,10 +1,12 @@
-import { Component } from '@angular/core';
+import { Component, ChangeDetectorRef } from '@angular/core';
 import { AbstractControl, FormBuilder, FormGroup, ValidationErrors, ValidatorFn, Validators } from '@angular/forms';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
-import { finalize } from 'rxjs';
+import { BehaviorSubject, finalize } from 'rxjs';
 import { AreaService } from 'src/app/shared/services/area.service';
 import { UserService } from 'src/app/shared/services/user.service';
 import { GatewayService } from 'src/app/shared/services/gateway.service';
+import { SocketService } from 'src/app/shared/services/socket.service';
+import { NotificationService } from 'src/app/shared/services/notification.service';
 @Component({
   selector: 'app-gateways',
   templateUrl: './gateways.component.html',
@@ -14,12 +16,13 @@ export class GatewaysComponent {
   modalReference: any = '';
   areas: any[] = [];
   gatewayForm: FormGroup;
-  user: any
-  gateways:any[]=[];
+  user: any;
+  private gatewaySubject = new BehaviorSubject<any[]>([]);
+  gateways: any[] = [];
   query: string = ''; // The search query entered by the user
   errorMessage: string = ''; // To store error messages
-  hasGateways:boolean=true;
-  constructor(private modalService: NgbModal, private fb: FormBuilder, private areaService: AreaService, private userService: UserService,private gatewayService:GatewayService) {
+  hasGateways: boolean = true;
+  constructor(private modalService: NgbModal, private fb: FormBuilder, private areaService: AreaService, private userService: UserService, private gatewayService: GatewayService, private socketService: SocketService, private toastr: NotificationService) {
 
     this.userService.user$.subscribe((user) => {
       this.user = user.user; // Update user info dynamically
@@ -41,18 +44,18 @@ export class GatewaysComponent {
     return (formGroup: AbstractControl): ValidationErrors | null => {
       const minRSSI = formGroup.get(minKey)?.value;
       const maxRSSI = formGroup.get(maxKey)?.value;
-  
+
       if (minRSSI !== null && maxRSSI !== null && minRSSI > maxRSSI) {
         return { invalidRange: true }; // Error key if validation fails
       }
-  
+
       return null; // No error
     };
   }
 
-   // Triggered when the Gateways types in the search field
-   onKeySearch() {
-    this.gatewayService.searchGateways(this.query,this.user.clientId).subscribe(
+  // Triggered when the Gateways types in the search field
+  onKeySearch() {
+    this.gatewayService.searchGateways(this.query, this.user.clientId).subscribe(
       (response: any) => {
         this.gateways = response.gateways; // Set the found areas
         this.errorMessage = ''; // Clear any previous error
@@ -70,12 +73,28 @@ export class GatewaysComponent {
     this.modalReference = this.modalService.open(content, {
       size: 'lg',
     });
+
+    this.modalReference.result.then(
+      (result: any) => {
+        // Logic to execute when modal is closed with "close"
+        this.gatewayForm.reset(); // You can call your custom method here
+      },
+      (reason: any) => {
+        // Logic to execute when modal is dismissed (e.g., by clicking outside or pressing ESC)
+        this.gatewayForm.reset(); // Call your custom dismiss method
+      }
+    );
   };
 
   ngOnInit(): void {
 
-    this.loadGateways(this.user.clientId);
+    this.loadGateways(this.user.clientId)
     this.loadAreas(this.user.clientId);
+    // Listen for gateway status updates
+    this.socketService.onGatewayStatus().subscribe((status) => {
+      console.log('Received gateway status:', status);
+      this.updateGatewayStatus(status);
+    });
   }
 
   // Load all areas
@@ -91,12 +110,12 @@ export class GatewaysComponent {
     );
   }
 
-   // Load all Gateways
-   loadGateways(clientId: any): void {
+  // Load all Gateways
+  loadGateways(clientId: any): void {
     this.gatewayService.getGateways(clientId).subscribe(
       (data) => {
         this.gateways = data;
-        console.log(this.gateways)
+        this.gatewaySubject.next(this.gateways);
         this.hasGateways = true;
       },
       (error) => {
@@ -108,22 +127,44 @@ export class GatewaysComponent {
     );
   }
 
-  ViewDataForEdit(gateway:any,modalcontent:any)
-  {
-      this.gatewayForm.controls["area"].setValue(gateway.areaId);
-      this.gatewayForm.controls["macAddress"].setValue(gateway.macAddress);
-      this.gatewayForm.controls["minRSSI"].setValue(gateway.minRSSI);
-      this.gatewayForm.controls["maxRSSI"].setValue(gateway.maxRSSI);
-      this.gatewayForm.controls["gatewayStatus"].setValue(gateway.status=="Active"?true:false);
-      this.modalReference = this.modalService.open(modalcontent, {
-        size: 'lg',
-      });
+  // Update gateway status
+  private updateGatewayStatus(newStatus: any) {
+
+    const currentGateways = this.gatewaySubject.getValue();
+    const updatedGateways = currentGateways.map(gateway =>
+      gateway.macAddress === newStatus.id.toUpperCase() ? { ...gateway, connected: newStatus.connected, connectedStatus: newStatus.connected } : gateway
+    );
+    this.gatewaySubject.next(updatedGateways);
+
+    this.gateways = this.gatewaySubject.getValue();
   }
 
-   // This function is called when the switch is toggled
-   onStatusChange(event: any,gateway:any) {
+  ViewDataForEdit(gateway: any, modalcontent: any) {
+    this.gatewayForm.controls["area"].setValue(gateway.areaId);
+    this.gatewayForm.controls["macAddress"].setValue(gateway.macAddress);
+    this.gatewayForm.controls["minRSSI"].setValue(gateway.minRSSI);
+    this.gatewayForm.controls["maxRSSI"].setValue(gateway.maxRSSI);
+    this.gatewayForm.controls["gatewayStatus"].setValue(gateway.status == "Active" ? true : false);
+    this.modalReference = this.modalService.open(modalcontent, {
+      size: 'lg',
+    });
+
+    this.modalReference.result.then(
+      (result: any) => {
+        // Logic to execute when modal is closed with "close"
+        this.gatewayForm.reset(); // You can call your custom method here
+      },
+      (reason: any) => {
+        // Logic to execute when modal is dismissed (e.g., by clicking outside or pressing ESC)
+        this.gatewayForm.reset(); // Call your custom dismiss method
+      }
+    );
+  }
+
+  // This function is called when the switch is toggled
+  onStatusChange(event: any, gateway: any) {
     const status = event ? 'Active' : 'InActive'; // Get the new status
-    const gatewayInfo = { macAddress: gateway.macAddress,status: status ,clientId : this.user.clientId}
+    const gatewayInfo = { macAddress: gateway.macAddress, status: status, clientId: this.user.clientId }
     this.gatewayService.GatewayStatusChange(gatewayInfo).subscribe(
       (response) => {
         gateway.status = status;
@@ -134,36 +175,39 @@ export class GatewaysComponent {
     );
   }
 
-  onSubmit(modal:any) { 
+  onSubmit(modal: any) {
     if (this.gatewayForm.valid) {
-      
+
       const macAddress = this.gatewayForm.controls["macAddress"].value;
       const minRSSI = this.gatewayForm.controls["minRSSI"].value;
       const maxRSSI = this.gatewayForm.controls["maxRSSI"].value;
       const area = this.gatewayForm.controls["area"].value;
-      const gatewayStatus =  this.gatewayForm.controls["gatewayStatus"].value?'Active':'InActive';
-      const clientId =  this.user.clientId;
+      const gatewayStatus = this.gatewayForm.controls["gatewayStatus"].value ? 'Active' : 'InActive';
+      const clientId = this.user.clientId;
       const newGateway = {
         "macAddress": macAddress,
-        "minRSSI":minRSSI,
-        "maxRSSI":maxRSSI,
-        "areaId":area,
+        "minRSSI": minRSSI,
+        "maxRSSI": maxRSSI,
+        "areaId": area,
         "status": gatewayStatus,
-        "clientId":clientId
+        "clientId": clientId
       };
-  
+
       this.gatewayService.createGateway(newGateway).subscribe(
         (response) => {
           this.gatewayForm.reset();
           modal.close();
           console.log('Gateway created:', response);
-          this.loadGateways(this.user.clientId); // Refresh the list
+          // Subscribe to gateway status updates
+          this.loadGateways(this.user.clientId);
+          this.toastr.showSuccess("Gateway Created Successfully", "Success");
         },
         (error) => {
           console.error('Error creating Gateway:', error);
+          this.toastr.showError(error, "Error");
         }
       );
-      
+
     } else {
       this.gatewayForm.markAllAsTouched(); // Highlight validation errors
     }

@@ -11,15 +11,9 @@ import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 import { CommonLayoutComponent } from './layouts/common-layout/common-layout.component';
 import { FullLayoutComponent } from './layouts/full-layout/full-layout.component';
 import { SharedModule } from './shared/shared.module';
-// import { AuthModule } from './auth/auth.module';
-// import { RouterModule, Routes } from '@angular/router';
-// import { AuthGuard } from './auth/auth.guard';
-// import { LoginComponent } from './auth/login/login.component';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { ToastrModule } from 'ngx-toastr';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
-//import { FilterByTypePipe } from './filter-by-type.pipe';
-
 
 export function createTranslateLoader(http: HttpClient): any {
   return new TranslateHttpLoader(http, 'assets/i18n/', '.json');
@@ -31,14 +25,7 @@ export function createTranslateLoader(http: HttpClient): any {
   declarations: [
     AppComponent,
     CommonLayoutComponent,
-    FullLayoutComponent,
-    //FilterByTypePipe,
-    // DashboardProductadminComponent,
-    // ClientsComponent,
-    // UsersComponent,
-    // AreasComponent,
-    // DashboardClientComponent,
-
+    FullLayoutComponent
   ],
   imports: [
     BrowserModule,

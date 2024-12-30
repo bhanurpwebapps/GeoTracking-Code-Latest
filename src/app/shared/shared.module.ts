@@ -9,10 +9,10 @@ import { NgScrollbarModule } from 'ngx-scrollbar';
 import { LanguageService } from './language.service';
 import { TranslateModule } from '@ngx-translate/core';
 import { TopbarComponent } from './topbar/topbar.component';
-
+import { FilterByTypePipe } from '../filter-by-type.pipe';
 
 @NgModule({
-  declarations: [SidebarComponent, TopbarComponent],
+  declarations: [SidebarComponent, TopbarComponent,FilterByTypePipe],
   imports: [
     CommonModule,
     SharedRoutingModule,
@@ -20,7 +20,7 @@ import { TopbarComponent } from './topbar/topbar.component';
     NgbDropdownModule,
     TranslateModule
   ],
-  exports:[SidebarComponent, TopbarComponent],
+  exports:[SidebarComponent, TopbarComponent,FilterByTypePipe],
   providers:[LanguageService]
 })
 export class SharedModule { }

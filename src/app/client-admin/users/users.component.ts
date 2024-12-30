@@ -2,6 +2,7 @@ import { Component } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { finalize } from 'rxjs';
+import { NotificationService } from 'src/app/shared/services/notification.service';
 import { UserService } from 'src/app/shared/services/user.service';
 
 @Component({
@@ -16,7 +17,7 @@ export class UsersComponent {
   errorMessage: string = ''; // To store error messages
   userForm: FormGroup;
   user: any;
-  constructor(private modalService: NgbModal,private fb: FormBuilder,private userService:UserService){ 
+  constructor(private modalService: NgbModal,private fb: FormBuilder,private userService:UserService, private toastr: NotificationService){ 
     this.userService.user$.subscribe((user) => {
       this.user = user.user; // Update user info dynamically
     });
@@ -50,6 +51,16 @@ export class UsersComponent {
     this.modalReference = this.modalService.open(content, {
       size: 'lg',
     });
+    this.modalReference.result.then(
+      (result:any) => {
+        // Logic to execute when modal is closed with "close"
+        this.userForm.reset(); // You can call your custom method here
+      },
+      (reason:any) => {
+        // Logic to execute when modal is dismissed (e.g., by clicking outside or pressing ESC)
+        this.userForm.reset(); // Call your custom dismiss method
+      }
+    );
   };
 
   ngOnInit(): void {
@@ -80,6 +91,17 @@ export class UsersComponent {
       this.modalReference = this.modalService.open(modalcontent, {
         size: 'lg',
       });
+
+      this.modalReference.result.then(
+        (result:any) => {
+          // Logic to execute when modal is closed with "close"
+          this.userForm.reset(); // You can call your custom method here
+        },
+        (reason:any) => {
+          // Logic to execute when modal is dismissed (e.g., by clicking outside or pressing ESC)
+          this.userForm.reset(); // Call your custom dismiss method
+        }
+      );
   }
 
   // This function is called when the switch is toggled
@@ -123,9 +145,11 @@ export class UsersComponent {
           modal.close();
           console.log('User created:', response);
           this.loadUsers(this.user.clientId); // Refresh the list
+          this.toastr.showSuccess("User Created Successfully", "Success");
         },
         (error) => {
           console.error('Error creating client:', error);
+          this.toastr.showError(error, "Error");
         }
       );
       

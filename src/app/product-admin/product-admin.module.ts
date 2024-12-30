@@ -8,7 +8,7 @@ import { DashboardProductadminComponent } from './dashboard-productadmin/dashboa
 
 @NgModule({
   declarations: [
-    DashboardProductadminComponent
+    //DashboardProductadminComponent
 
   ],
   imports: [

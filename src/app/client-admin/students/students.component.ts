@@ -5,6 +5,7 @@ import { finalize } from 'rxjs';
 import { AreaService } from 'src/app/shared/services/area.service';
 import { UserService } from 'src/app/shared/services/user.service';
 import { StudentService } from 'src/app/shared/services/student.service';
+import { NotificationService } from 'src/app/shared/services/notification.service';
 @Component({
   selector: 'app-students',
   templateUrl: './students.component.html',
@@ -21,7 +22,7 @@ export class StudentsComponent {
   students:any[]=[];
   area:any=null;
   hasStudents:boolean=true;
-  constructor(private modalService: NgbModal, private fb: FormBuilder, private areaService: AreaService, private userService: UserService,private studentService:StudentService) {
+  constructor(private modalService: NgbModal, private fb: FormBuilder, private areaService: AreaService, private userService: UserService,private studentService:StudentService, private toastr: NotificationService) {
     this.userService.user$.subscribe((user) => {
       this.user = user.user; // Update user info dynamically
     });
@@ -37,7 +38,8 @@ export class StudentsComponent {
       phone: ['', [Validators.required, Validators.pattern('^-?[0-9]*$')]],
       email: ['', [Validators.required, , Validators.email]],
       authorizedAreas: ['', [Validators.required]],
-      studentStatus: [true]
+      studentStatus: [true],
+      dob: ['', [Validators.required]], // Add dob validation here
     });
   }
 
@@ -46,6 +48,17 @@ export class StudentsComponent {
     this.modalReference = this.modalService.open(content, {
       size: 'lg',
     });
+
+    this.modalReference.result.then(
+      (result:any) => {
+        // Logic to execute when modal is closed with "close"
+        this.studentForm.reset(); // You can call your custom method here
+      },
+      (reason:any) => {
+        // Logic to execute when modal is dismissed (e.g., by clicking outside or pressing ESC)
+        this.studentForm.reset(); // Call your custom dismiss method
+      }
+    );
   };
 
   ngOnInit(): void {
@@ -110,12 +123,28 @@ export class StudentsComponent {
       this.studentForm.controls["phone"].setValue(student.contact.phone);
       this.studentForm.controls["email"].setValue(student.contact.email);
       this.studentForm.controls["bleDeviceId"].setValue(student.bleDeviceId);
+      // Assuming the dob input field is part of your reactive form
+      const dob = new Date(student.dateOfBirth); // Date object
+      const formattedDob = dob.toISOString().split('T')[0]; // Format to YYYY-MM-DD
+
+      this.studentForm.controls["dob"].setValue(formattedDob);
       //this.studentForm.controls["authorizedAreas"].setValue(student.authorizedAreas);      
-      this.selectedAreas = student.authorizedAreas.filter((item:any) =>{return item !== student.classRoom});;
+      this.selectedAreas = student.authorizedAreas.filter((item:any) =>{return item !== student.classRoom});
       this.studentForm.controls["studentStatus"].setValue(student.status=="Active"?true:false);
       this.modalReference = this.modalService.open(modalcontent, {
         size: 'lg',
       });
+
+      this.modalReference.result.then(
+        (result:any) => {
+          // Logic to execute when modal is closed with "close"
+          this.studentForm.reset(); // You can call your custom method here
+        },
+        (reason:any) => {
+          // Logic to execute when modal is dismissed (e.g., by clicking outside or pressing ESC)
+          this.studentForm.reset(); // Call your custom dismiss method
+        }
+      );
   }
 
    // This function is called when the switch is toggled
@@ -158,6 +187,7 @@ export class StudentsComponent {
       const bleDeviceId = this.studentForm.controls["bleDeviceId"].value;
       const authorizedAreas = this.studentForm.controls["authorizedAreas"].value;
       const status =  'Active';
+      const dob = this.studentForm.controls["dob"].value;
       const clientId =  this.user.clientId;
       const newStudent = {
         "studentRegistrationNo": studentRegistrationNo,
@@ -169,18 +199,23 @@ export class StudentsComponent {
         "bleDeviceId": bleDeviceId,
         "clientId":clientId,
         "authorizedAreas":authorizedAreas,
-        "status":status
+        "status":status,
+        "dateOfBirth":dob
       };
   
       this.studentService.createStudent(newStudent).subscribe(
         (response) => {
-          this.studentForm.reset();
+          //this.studentForm.reset();
           modal.close();
           console.log('Student created:', response);
+          this.toastr.showSuccess("Student Created Successfully", "Success");
           this.loadStudents(this.user.clientId,this.area); // Refresh the list
+          
         },
         (error) => {
           console.error('Error creating Student:', error);
+          this.toastr.showError(error, "Error");
+          
         }
       );
       

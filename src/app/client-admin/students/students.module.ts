@@ -5,10 +5,11 @@ import { StudentsRoutingModule } from './students-routing.module';
 import { NgSelectModule } from '@ng-select/ng-select';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { UiSwitchModule } from 'ngx-ui-switch';
-import { FilterByTypePipe } from '../../filter-by-type.pipe';
+//import { FilterByTypePipe } from '../../filter-by-type.pipe';
+import { SharedModule } from '../../shared/shared.module';
 @NgModule({
-  declarations: [StudentsComponent,FilterByTypePipe],
-  exports: [FilterByTypePipe],
+  declarations: [StudentsComponent],//,FilterByTypePipe],
+  //exports: [FilterByTypePipe],
   imports: [
     CommonModule,
     StudentsRoutingModule,
@@ -24,6 +25,7 @@ import { FilterByTypePipe } from '../../filter-by-type.pipe';
     }),
     FormsModule, // Template-driven forms
     ReactiveFormsModule, // Reactive forms
+    SharedModule
   ]
 })
 export class StudentsModule {}

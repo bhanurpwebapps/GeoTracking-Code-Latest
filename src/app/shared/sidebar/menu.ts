@@ -77,6 +77,13 @@ export const MENU: MenuItem[] = [
             link: 'attendance',
             userType:['ClientUser']
         },
+        {
+            id: 28,
+            label: 'Report',
+            img:"assets/images/report-icon.svg",
+            link: 'attendancereport',
+            userType:['ClientUser']
+        },
 
  
 ];

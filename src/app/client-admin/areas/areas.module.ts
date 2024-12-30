@@ -4,12 +4,17 @@ import { AreasComponent } from './areas.component';
 import { AreasRoutingModule } from './areas-routing.module';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { UiSwitchModule } from 'ngx-ui-switch';
-
+//import { FilterByTypePipe } from '../../filter-by-type.pipe';
+import { NgSelectModule } from '@ng-select/ng-select';
+import { NgbPaginationModule } from '@ng-bootstrap/ng-bootstrap';
 @NgModule({
-  declarations: [AreasComponent],
+  declarations: [AreasComponent],//,FilterByTypePipe],
+  //exports: [FilterByTypePipe],
   imports: [
     CommonModule,
     AreasRoutingModule,
+    NgSelectModule,
+    NgbPaginationModule,
     UiSwitchModule.forRoot({
       size: 'small',
       color: 'rgb(0, 189, 99)',

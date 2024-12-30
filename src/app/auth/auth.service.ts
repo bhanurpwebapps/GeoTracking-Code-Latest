@@ -21,6 +21,14 @@ export class AuthService {
       .pipe(catchError(this.handleError));
   }
 
+
+  // Login function
+  changePassword(body:any): Observable<any> {
+    return this.http
+      .post<any>(`${this.apiUrl}/change-password`, body)
+      .pipe(catchError(this.handleError));
+  }
+
   // Store JWT token in local storage
   setToken(token: string): void {
     localStorage.setItem('authToken', token);

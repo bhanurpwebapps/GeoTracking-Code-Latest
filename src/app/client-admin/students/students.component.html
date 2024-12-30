@@ -147,16 +147,25 @@
                                     [ngClass]="{ 'is-invalid': studentForm.get('studentName')?.invalid && studentForm.get('studentName')?.touched }">
                                 <div *ngIf="studentForm.get('studentName')?.invalid && studentForm.get('studentName')?.touched"
                                     class="invalid-feedback">
-                                    <small *ngIf="studentForm.get('studentName')?.errors?.['required']">BLE Device ID is
+                                    <small *ngIf="studentForm.get('studentName')?.errors?.['required']">Student Name is
                                         required.</small>
-                                    <small *ngIf="studentForm.get('studentName')?.errors?.['minlength']">BLE Device ID
+                                    <!-- <small *ngIf="studentForm.get('studentName')?.errors?.['minlength']">Student Name
                                         must be at
-                                        least 8 characters long.</small>
+                                        least 8 characters long.</small> -->
                                 </div>
                             </div>
 
                         </div>
-
+                        <div class="col-sm-6">
+                            <div class="formGroup">
+                              <label>Date of Birth</label>
+                              <input type="date" id="dob" class="form-control" formControlName="dob"
+                                     [ngClass]="{ 'is-invalid': studentForm.get('dob')?.invalid && studentForm.get('dob')?.touched }">
+                              <div *ngIf="studentForm.get('dob')?.invalid && studentForm.get('dob')?.touched" class="invalid-feedback">
+                                <small *ngIf="studentForm.get('dob')?.errors?.['required']">Date of Birth is required.</small>
+                              </div>
+                            </div>
+                          </div>
                         <div class="col-sm-6">
                             <div class="formGroup">
                                 <label>Roll No</label>
@@ -164,7 +173,7 @@
                                     [ngClass]="{ 'is-invalid': studentForm.get('rollNo')?.invalid && studentForm.get('rollNo')?.touched }">
                                 <div *ngIf="studentForm.get('rollNo')?.invalid && studentForm.get('rollNo')?.touched"
                                     class="invalid-feedback">
-                                    <small *ngIf="studentForm.get('rollNo')?.errors?.['required']">rollNo is
+                                    <small *ngIf="studentForm.get('rollNo')?.errors?.['required']">Roll No is
                                         required.</small>
                                 </div>
                             </div>
@@ -183,7 +192,7 @@
                             <!-- Validation Message -->
                             <div *ngIf="studentForm.get('classroom')?.invalid && studentForm.get('classroom')?.touched"
                                 class="invalid-feedback">
-                                <small *ngIf="studentForm.get('classroom')?.errors?.['required']">Area is
+                                <small *ngIf="studentForm.get('classroom')?.errors?.['required']">Class is
                                     required.</small>
                             </div>
                             </div>
@@ -196,7 +205,7 @@
                                     [ngClass]="{ 'is-invalid': studentForm.get('address')?.invalid && studentForm.get('address')?.touched }">
                                 <div *ngIf="studentForm.get('address')?.invalid && studentForm.get('address')?.touched"
                                     class="invalid-feedback">
-                                    <small *ngIf="studentForm.get('address')?.errors?.['required']">rollNo is
+                                    <small *ngIf="studentForm.get('address')?.errors?.['required']">Address is
                                         required.</small>
                                 </div>
                             </div>
@@ -209,7 +218,7 @@
                                     [ngClass]="{ 'is-invalid': studentForm.get('phone')?.invalid && studentForm.get('phone')?.touched }">
                                 <div *ngIf="studentForm.get('phone')?.invalid && studentForm.get('phone')?.touched"
                                     class="invalid-feedback">
-                                    <small *ngIf="studentForm.get('phone')?.errors?.['required']">rollNo is
+                                    <small *ngIf="studentForm.get('phone')?.errors?.['required']">Phone is
                                         required.</small>
                                 </div>
                             </div>
@@ -234,15 +243,6 @@
                         <div class="col-sm-6">
                             <div class="formGroup">
                                 <label>Authorized Areas</label>
-
-                                <!-- <select class="form-select form-control" aria-label="select type" id="authorizedAreas"
-                                    formControlName="authorizedAreas"
-                                    [ngClass]="{ 'is-invalid': studentForm.get('authorizedAreas')?.invalid && studentForm.get('authorizedAreas')?.touched }">
-                                    <option [value]="null" disabled selected>Select Type</option>
-                                    <option *ngFor="let area of areas | filterByType: 'Classroom': true" [value]="area._id">
-                                        {{ area.name }}
-                                    </option>
-                                </select> -->
                                 <ng-select
                                 placeholder="Select Authorized Areas"
                                 [items]="areas | filterByType: 'Classroom': true"
@@ -259,7 +259,7 @@
                                 <!-- Validation Message -->
                                 <div *ngIf="studentForm.get('authorizedAreas')?.invalid && studentForm.get('authorizedAreas')?.touched"
                                     class="invalid-feedback">
-                                    <small *ngIf="studentForm.get('authorizedAreas')?.errors?.['required']">Area is
+                                    <small *ngIf="studentForm.get('authorizedAreas')?.errors?.['required']">Authorized Areas is
                                         required.</small>
                                 </div>
                             </div>

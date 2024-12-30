@@ -43,7 +43,7 @@
                                 <td>{{gateway.macAddress}}</td>
                                 <td>{{gateway.minRSSI}} </td>
                                 <td>{{gateway.maxRSSI}}</td>
-                                <td>Active</td>
+                                <td><span class="action-icon"><i class="fa fa-circle" [ngClass]="gateway.connected || gateway.connectedStatus ? 'green':'red'" aria-hidden="true"></i></span> {{ gateway.connected || gateway.connectedStatus ? 'Connected' : 'Disconnected' }}</td>
                                 <td class="gridswitchToggleStyle"><ui-switch [checked]="gateway.status=='Active'?true:false" (change)="onStatusChange($event,gateway)"></ui-switch></td>
                                 <td>
                                     <!-- <button type="submit" class="btn tableIconBt waves-effect waves-light me-1">
@@ -61,7 +61,7 @@
                             </tr>
                         </tbody>
                     </table>
-                    <div class="noData" *ngIf="!hasGateways">
+                    <div class="noData" *ngIf="gateways.length===0">
                         <img src="assets/images/nodata.png" alt="nodata">
                             <h4>No Data Found</h4>
                     </div>
@@ -115,9 +115,9 @@
                                 [ngClass]="{ 'is-invalid': gatewayForm.get('macAddress')?.invalid && gatewayForm.get('macAddress')?.touched }">
                                 <div *ngIf="gatewayForm.get('macAddress')?.invalid && gatewayForm.get('macAddress')?.touched"
                                     class="invalid-feedback">
-                                    <small *ngIf="gatewayForm.get('macAddress')?.errors?.['required']">Name is
+                                    <small *ngIf="gatewayForm.get('macAddress')?.errors?.['required']">Mac Address is
                                         required.</small>
-                                    <small *ngIf="gatewayForm.get('macAddress')?.errors?.['minlength']">macAddress must be at
+                                    <small *ngIf="gatewayForm.get('macAddress')?.errors?.['minlength']">Mac Address must be at
                                         least 12 characters long.</small>
                                 </div>
                             </div>
@@ -129,12 +129,17 @@
                                 <label>Min RSSI</label>
                                 <input type="number" class="form-control" formControlName="minRSSI" id="minRSSI"
                                 [ngClass]="{ 'is-invalid': gatewayForm.get('minRSSI')?.invalid && gatewayForm.get('minRSSI')?.touched }">
-                                <div *ngIf="gatewayForm.get('minRSSI')?.hasError('required') && gatewayForm.get('minRSSI')?.touched">
+                                
+
+                                  <div *ngIf="gatewayForm.get('minRSSI')?.invalid && gatewayForm.get('minRSSI')?.touched"
+                                  class="invalid-feedback">
+                                  <small *ngIf="gatewayForm.get('minRSSI')?.hasError('required') && gatewayForm.get('minRSSI')?.touched">
                                     Min RSSI is required.
-                                  </div>
-                                  <div *ngIf="gatewayForm.get('minRSSI')?.hasError('pattern') && gatewayForm.get('minRSSI')?.touched">
+                                  </small>
+                                  <small *ngIf="gatewayForm.get('minRSSI')?.hasError('pattern') && gatewayForm.get('minRSSI')?.touched">
                                     Min RSSI must be a valid number.
-                                  </div>
+                                  </small>
+                              </div>
                             </div>
                         </div>
 

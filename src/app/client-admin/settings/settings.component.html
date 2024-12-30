@@ -13,8 +13,8 @@
                             <div class="card-body">
                                 <div class="d-flex">
                                     <h3>School Start At</h3>
-                                    <ngb-timepicker [(ngModel)]="schoolStartAtTime" [seconds]="false" [hourStep]="hourStep"
-                                        [minuteStep]="minuteStep" id="schoolStartAt"
+                                    <ngb-timepicker [(ngModel)]="schoolStartAtTime" [seconds]="false"
+                                        [hourStep]="hourStep" [minuteStep]="minuteStep" id="schoolStartAt"
                                         formControlName="schoolStartAt" /><span class="hint-text">(HH:MM)</span>
                                 </div>
                             </div>
@@ -26,11 +26,11 @@
                             <div class="card-body">
                                 <div class="d-flex">
                                     <h3>School End At</h3>
-                                    <ngb-timepicker [(ngModel)]="schoolEndAtTime" [seconds]="false" [hourStep]="hourStep"
-                                        [minuteStep]="minuteStep" id="schoolEndAt"
+                                    <ngb-timepicker [(ngModel)]="schoolEndAtTime" [seconds]="false"
+                                        [hourStep]="hourStep" [minuteStep]="minuteStep" id="schoolEndAt"
                                         formControlName="schoolEndAt" /><span class="hint-text">(HH:MM)</span>
                                 </div>
-                                <div class="d-flex alert alert-danger" *ngIf="schoolForm.errors?.['startAfterEnd']" >
+                                <div class="d-flex alert alert-danger" *ngIf="schoolForm.errors?.['startAfterEnd']">
                                     Start time must not be later than end time.
                                 </div>
                             </div>
@@ -52,9 +52,10 @@
                             <div class="card-body">
                                 <div class="d-flex">
                                     <h3>Classroom Presence Timeout</h3>
-                                    <ngb-timepicker [(ngModel)]="classroomPresenceTimeoutTime" [seconds]="true"  [hourStep]="hourStep" 
-                                        [minuteStep]="minuteStep" [secondStep]="secondStep"
-                                        id="classroomPresenceTimeout" formControlName="classroomPresenceTimeout" /><span class="hint-text">(In Seconds)</span>
+                                    <ngb-timepicker [(ngModel)]="classroomPresenceTimeoutTime" [seconds]="true"
+                                        [hourStep]="hourStep" [minuteStep]="minuteStep" [secondStep]="secondStep"
+                                        id="classroomPresenceTimeout" formControlName="classroomPresenceTimeout" /><span
+                                        class="hint-text">(In Seconds)</span>
 
                                 </div>
                             </div>
@@ -66,22 +67,24 @@
                             <div class="card-body">
                                 <div class="d-flex">
                                     <h3>Absence Timeout</h3>
-                                    <ngb-timepicker [(ngModel)]="absenceTimeoutTime" [seconds]="true" [hourStep]="hourStep"
-                                        [minuteStep]="minuteStep" [secondStep]="secondStep" id="absenceTimeout"
-                                        formControlName="absenceTimeout" /><span class="hint-text">(In Minutes)</span>
+                                    <ngb-timepicker [(ngModel)]="absenceTimeoutTime" [seconds]="true"
+                                        [hourStep]="hourStep" [minuteStep]="minuteStep" [secondStep]="secondStep"
+                                        id="absenceTimeout" formControlName="absenceTimeout" /><span
+                                        class="hint-text">(In Minutes)</span>
                                 </div>
                             </div>
                         </div>
                     </div>
 
-                    <div class="col-md-12">
+                    <div class="col-md-12" style="display: none;">
                         <div class="card cardShadow">
                             <div class="card-body">
                                 <div class="d-flex">
                                     <h3>Late Detection Timeout</h3>
-                                    <ngb-timepicker [(ngModel)]="lateDetectionTimeoutTime" [seconds]="true" [hourStep]="hourStep"
-                                        [minuteStep]="minuteStep" [secondStep]="secondStep" id="lateDetectionTimeout"
-                                        formControlName="lateDetectionTimeout" /><span class="hint-text">(In Minutes)</span>
+                                    <ngb-timepicker [(ngModel)]="lateDetectionTimeoutTime" [seconds]="true"
+                                        [hourStep]="hourStep" [minuteStep]="minuteStep" [secondStep]="secondStep"
+                                        id="lateDetectionTimeout" formControlName="lateDetectionTimeout" /><span
+                                        class="hint-text">(In Minutes)</span>
                                 </div>
                             </div>
                         </div>
@@ -92,22 +95,24 @@
                             <div class="card-body">
                                 <div class="d-flex">
                                     <h3>Unauthorized Zone Timeout</h3>
-                                    <ngb-timepicker [(ngModel)]="unauthorizedZoneTimeoutTime" [seconds]="true" [hourStep]="hourStep"
-                                        [minuteStep]="minuteStep" [secondStep]="secondStep" id="unauthorizedZoneTimeout"
-                                        formControlName="unauthorizedZoneTimeout" /><span class="hint-text">(In Minutes)</span>
+                                    <ngb-timepicker [(ngModel)]="unauthorizedZoneTimeoutTime" [seconds]="true"
+                                        [hourStep]="hourStep" [minuteStep]="minuteStep" [secondStep]="secondStep"
+                                        id="unauthorizedZoneTimeout" formControlName="unauthorizedZoneTimeout" /><span
+                                        class="hint-text">(In Minutes)</span>
                                 </div>
                             </div>
                         </div>
                     </div>
 
-                    <div class="col-md-12">
+                    <div class="col-md-12" style="display: none;">
                         <div class="card cardShadow">
                             <div class="card-body">
                                 <div class="d-flex">
                                     <h3>Sensitive Area Timeout</h3>
-                                    <ngb-timepicker [(ngModel)]="sensitiveAreaTimeoutTime" [seconds]="true" [hourStep]="hourStep"
-                                        [minuteStep]="minuteStep" [secondStep]="secondStep" id="sensitiveAreaTimeout"
-                                        formControlName="sensitiveAreaTimeout" /><span class="hint-text">(In Minutes)</span>
+                                    <ngb-timepicker [(ngModel)]="sensitiveAreaTimeoutTime" [seconds]="true"
+                                        [hourStep]="hourStep" [minuteStep]="minuteStep" [secondStep]="secondStep"
+                                        id="sensitiveAreaTimeout" formControlName="sensitiveAreaTimeout" /><span
+                                        class="hint-text">(In Minutes)</span>
                                 </div>
                             </div>
                         </div>
@@ -128,33 +133,53 @@
                         </div>
                     </div>
 
-                    <form class="formStyle mt-3">
+                    <form class="formStyle mt-3" [formGroup]="changePasswordForm"
+                    (ngSubmit)="onFormSubmit()">
                         <div class="formGroup">
                             <label>Current Password</label>
-                            <input type="text" class="form-control" required="" placeholder="">
+                            <input type="password" id="currentPassword" formControlName="currentPassword"
+                                class="form-control" />
+                            <!-- Validation Message -->
+                            <div *ngIf="changePasswordForm.get('currentPassword')?.invalid && changePasswordForm.get('currentPassword')?.touched"
+                                class="invalid-feedback">
+                                <small *ngIf="changePasswordForm.get('currentPassword')?.errors?.['required']">Current
+                                    password is required.</small>
+                            </div>
                         </div>
 
                         <div class="formGroup">
                             <label>New Password</label>
-                            <input type="text" class="form-control" required="" placeholder="">
+                            <input type="password" id="newPassword" formControlName="newPassword"
+                                class="form-control" />
+                            <!-- Validation Message -->
+                            <div *ngIf="changePasswordForm.get('newPassword')?.invalid && changePasswordForm.get('newPassword')?.touched"
+                                class="invalid-feedback">
+                                <small *ngIf="changePasswordForm.get('newPassword')?.errors?.['required']">New password
+                                    is required.</small>
+                                <small *ngIf="changePasswordForm.get('newPassword')?.errors?.['minlength']">New password
+                                    must be at least 6 characters long.</small>
+                            </div>
                         </div>
 
                         <div class="formGroup">
                             <label>Confirm Password</label>
-                            <input type="text" class="form-control" required="" placeholder="">
+                            <input type="password" id="confirmPassword" formControlName="confirmPassword"
+                                class="form-control" />
+                            <!-- Validation Message -->
+                            <div *ngIf="changePasswordForm.get('confirmPassword')?.invalid && changePasswordForm.get('confirmPassword')?.touched"
+                                class="invalid-feedback">
+                                <small *ngIf="changePasswordForm.get('confirmPassword')?.errors?.['required']">Confirm
+                                    password is required.</small>
+                                <small *ngIf="changePasswordForm.get('confirmPassword')?.errors?.['mismatch']">Passwords
+                                    do not match.</small>
+                            </div>
                         </div>
 
                         <div class="formGroup">
-                            <button type="button"
-                                class="btn btn-primary createBt fullWithBt"><span>Update</span></button>
+                            <button type="submit"
+                                class="btn btn-primary createBt fullWithBt" [disabled]="changePasswordForm.invalid"><span>Update</span></button>
                         </div>
-
-
                     </form>
-
-
-
-
                 </div>
             </div>
         </div>

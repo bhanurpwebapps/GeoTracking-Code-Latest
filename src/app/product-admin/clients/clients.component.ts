@@ -47,6 +47,17 @@ export class ClientsComponent {
     this.modalReference = this.modalService.open(content, {
       size: 'lg',
     });
+
+    this.modalReference.result.then(
+      (result:any) => {
+        // Logic to execute when modal is closed with "close"
+        this.clientForm.reset(); // You can call your custom method here
+      },
+      (reason:any) => {
+        // Logic to execute when modal is dismissed (e.g., by clicking outside or pressing ESC)
+        this.clientForm.reset(); // Call your custom dismiss method
+      }
+    );
   };
 
   ngOnInit(): void {
@@ -77,6 +88,17 @@ export class ClientsComponent {
     this.modalReference = this.modalService.open(modalcontent, {
       size: 'lg',
     });
+
+    this.modalReference.result.then(
+      (result:any) => {
+        // Logic to execute when modal is closed with "close"
+        this.clientForm.reset(); // You can call your custom method here
+      },
+      (reason:any) => {
+        // Logic to execute when modal is dismissed (e.g., by clicking outside or pressing ESC)
+        this.clientForm.reset(); // Call your custom dismiss method
+      }
+    );
   }
 
   // This function is called when the switch is toggled

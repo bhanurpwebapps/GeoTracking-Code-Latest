@@ -69,6 +69,16 @@ export const CommonLayout_ROUTES: Routes = [
     canActivate:[AuthGuard] 
   },
   {
+    path: 'viewattendance',
+    loadChildren: () => import('../../client-admin/view-attendance/view-attendance.module').then(m => m.ViewAttendanceModule),  
+    canActivate:[AuthGuard] 
+  },
+  {
+    path: 'attendancereport',
+    loadChildren: () => import('../../client-admin/attendancereport/attendancereport.module').then(m => m.AttendancereportModule),  
+    canActivate:[AuthGuard] 
+  },
+  {
     path: 'settings',
     loadChildren: () => import('../../client-admin/settings/settings.module').then(m => m.SettingsModule),  
     canActivate:[AuthGuard] 

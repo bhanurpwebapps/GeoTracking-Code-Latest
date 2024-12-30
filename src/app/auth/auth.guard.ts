@@ -9,7 +9,6 @@ export class AuthGuard implements CanActivate {
   constructor(private authService: AuthService, private router: Router) {}
 
   canActivate(): boolean {
-    debugger;
     if (this.authService.getToken()) {
       return true; // Allow route activation
     } else {
